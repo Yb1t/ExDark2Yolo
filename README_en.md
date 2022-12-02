@@ -1,7 +1,7 @@
 # ExDark2Yolo
-### 将ExDark注释的格式数据转换成YOLO格式数据
-简体中文 | [English](./README_en.md)
-  - ExDark的数据目录结构如下:
+### Convert ExDark annotated format data to YOLO format data
+[简体中文](./README.md) | English
+  - The ExDark data directory structure is as follows:
     ```text
       ExDark_dataset
         ├── annotations
@@ -14,19 +14,19 @@
             ...
     ```
     
-  - 转换:
+  - Convert:
     ```shell
     python exDark2Yolo.py --annotations-dir dataset/annotations \
                           --images-dir dataset/images \
                           --ratio 8:1:1 \
                           --output-dir output
     ```
-    - `--annotations-dir`：ExDark的标注目录。
-    - `--images-dir`：ExDark的图像目录。
-    - `--ratio`：（可选）train/test/val之间的比例，默认为8:1:1。
-    - `--output-dir`: （可选）图像和转换后的yolo标注的输出目录。
+    - `--annotations-dir`: ExDark annotations directory.
+    - `--images-dir`: ExDark images directory.
+    - `--ratio`: (optional) Ratio between train/test/val, default 8:1:1.
+    - `--output-dir`: (optional) Images and converted YOLO annotations output directory.
 
-  - 转换后的目录结构（输出目录）:
+  - Converted directory structure (output directory):
     ```text
       output
         ├── images
