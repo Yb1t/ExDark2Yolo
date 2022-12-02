@@ -5,33 +5,38 @@ import argparse
 labels = ['Bicycle', 'Boat', 'Bottle', 'Bus', 'Car', 'Cat', 'Chair', 'Cup', 'Dog', 'Motorbike', 'People', 'Table']
 
 
-def ExDark2Yolo(txts_dir, photos_dir, output_dir):
+def ExDark2Yolo(txts_dir: str, photos_dir: str, ratio: str, output_dir: str):
+    ratios = ratio.split(':')
+    ratio_train, ratio_test, ratio_val = int(ratios[0]), int(ratios[1]), int(ratios[2])
+    ratio_sum = ratio_train + ratio_test + ratio_val
+    dataset_perc = {'train': ratio_train / ratio_sum, 'test': ratio_test / ratio_sum, 'val': ratio_val / ratio_sum}
+    for t in dataset_perc:
+        os.makedirs('/'.join([output_dir, 'images', t]))
+        os.makedirs('/'.join([output_dir, 'labels', t]))
     for label in labels:
         print('Processing {}...'.format(label))
-        filenames = os.listdir(txts_dir + label)
-        os.makedirs(output_dir + label + '/train')
-        os.makedirs(output_dir + label + '/val')
-        os.makedirs(output_dir + label + '/test')
+        filenames = os.listdir('/'.join([txts_dir, label]))
         cur_idx = 0
         files_num = len(filenames)
 
         for filename in filenames:
             cur_idx += 1
-            if cur_idx < files_num*0.8:
-                path = output_dir + label + '/train/' + filename
-            elif cur_idx < files_num*0.9:
-                path = output_dir + label + '/val/' + filename
+            filename_no_ext = '.'.join(filename.split('.')[:-2])
+            if cur_idx < dataset_perc.get('train') * files_num:
+                set_type = 'train'
+            elif cur_idx < (dataset_perc.get('train') + dataset_perc.get('test')) * files_num:
+                set_type = 'test'
             else:
-                path = output_dir + label + '/test/' + filename
-            yolo_output_file = open(path, 'a')
+                set_type = 'val'
+            output_path = '/'.join([output_dir, 'labels', set_type, filename_no_ext + '.txt'])
+            yolo_output_file = open(output_path, 'a')
 
-            txt = open(txts_dir + label + '/' + filename, 'r')
-
+            name_split = filename.split('.')
             try:
-                img = Image.open(photos_dir + label + '/' + '.'.join(filename.split('.')[:-1]))
+                img = Image.open('/'.join([photos_dir, label, '.'.join(filename.split('.')[:-1])]))
             except FileNotFoundError:
-                name_split = filename.split('.')
-                img = Image.open(photos_dir + label + '/' + '.'.join(name_split[:-2]) + '.' + name_split[-2].upper())
+                img = Image.open('/'.join([photos_dir, label, ''.join(name_split[:-2]) + '.' + name_split[-2].upper()]))
+            txt = open('/'.join([txts_dir, label, filename]), 'r')
 
             width, height = img.size
 
@@ -52,7 +57,7 @@ def ExDark2Yolo(txts_dir, photos_dir, output_dir):
                                                  format(y, '.5f'),
                                                  format(w, '.5f'),
                                                  format(h, '.5f'),
-                                                 ])+'\n')
+                                                 ]) + '\n')
                 line = txt.readline()
 
             yolo_output_file.close()
@@ -60,9 +65,9 @@ def ExDark2Yolo(txts_dir, photos_dir, output_dir):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--annotations-dir', type=str, required=True, help="ExDark annotations Directory, end with '/'")
-    parser.add_argument('--images-dir', type=str, required=True, help="ExDark images Directory, end with '/'")
-    parser.add_argument('--output-dir', type=str, default="output/")
+    parser.add_argument('--annotations-dir', type=str, required=True, help="ExDark annotations Directory")
+    parser.add_argument('--images-dir', type=str, required=True, help="ExDark images Directory")
+    parser.add_argument('--ratio', type=str, default='8:1:1', help="Ratio between train/test/val, default 8:1:1")
+    parser.add_argument('--output-dir', type=str, default="output")
     args = parser.parse_args()
-    ExDark2Yolo(args.annotations_dir, args.images_dir, args.output_dir)
-
+    ExDark2Yolo(args.annotations_dir, args.images_dir, args.ratio, args.output_dir)
