@@ -5,33 +5,33 @@ import argparse
 labels = ['Bicycle', 'Boat', 'Bottle', 'Bus', 'Car', 'Cat', 'Chair', 'Cup', 'Dog', 'Motorbike', 'People', 'Table']
 
 
-def ExDark2Yolo(txts_path, photos_path, output_path):
+def ExDark2Yolo(txts_dir, photos_dir, output_dir):
     for label in labels:
-        print('Processing %s...' % label)
-        filenames = os.listdir(txts_path + label)
-        os.makedirs(output_path + label + '/train')
-        os.makedirs(output_path + label + '/val')
-        os.makedirs(output_path + label + '/test')
+        print('Processing {}...'.format(label))
+        filenames = os.listdir(txts_dir + label)
+        os.makedirs(output_dir + label + '/train')
+        os.makedirs(output_dir + label + '/val')
+        os.makedirs(output_dir + label + '/test')
         cur_idx = 0
         files_num = len(filenames)
 
         for filename in filenames:
             cur_idx += 1
             if cur_idx < files_num*0.8:
-                path = output_path + label + '/train/' + filename
+                path = output_dir + label + '/train/' + filename
             elif cur_idx < files_num*0.9:
-                path = output_path + label + '/val/' + filename
+                path = output_dir + label + '/val/' + filename
             else:
-                path = output_path + label + '/test/' + filename
+                path = output_dir + label + '/test/' + filename
             yolo_output_file = open(path, 'a')
 
-            txt = open(txts_path + label + '/' + filename, 'r')
+            txt = open(txts_dir + label + '/' + filename, 'r')
 
             try:
-                img = Image.open(photos_path + label + '/' + '.'.join(filename.split('.')[:-1]))
+                img = Image.open(photos_dir + label + '/' + '.'.join(filename.split('.')[:-1]))
             except FileNotFoundError:
                 name_split = filename.split('.')
-                img = Image.open(photos_path + label + '/' + '.'.join(name_split[:-2]) + '.' + name_split[-2].upper())
+                img = Image.open(photos_dir + label + '/' + '.'.join(name_split[:-2]) + '.' + name_split[-2].upper())
 
             width, height = img.size
 
