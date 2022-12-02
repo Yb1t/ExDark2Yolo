@@ -1,6 +1,7 @@
 import os
 from PIL import Image
 import argparse
+import shutil
 
 labels = ['Bicycle', 'Boat', 'Bottle', 'Bus', 'Car', 'Cat', 'Chair', 'Cup', 'Dog', 'Motorbike', 'People', 'Table']
 
@@ -10,9 +11,11 @@ def ExDark2Yolo(txts_dir: str, photos_dir: str, ratio: str, output_dir: str):
     ratio_train, ratio_test, ratio_val = int(ratios[0]), int(ratios[1]), int(ratios[2])
     ratio_sum = ratio_train + ratio_test + ratio_val
     dataset_perc = {'train': ratio_train / ratio_sum, 'test': ratio_test / ratio_sum, 'val': ratio_val / ratio_sum}
+
     for t in dataset_perc:
         os.makedirs('/'.join([output_dir, 'images', t]))
         os.makedirs('/'.join([output_dir, 'labels', t]))
+
     for label in labels:
         print('Processing {}...'.format(label))
         filenames = os.listdir('/'.join([txts_dir, label]))
@@ -28,18 +31,22 @@ def ExDark2Yolo(txts_dir: str, photos_dir: str, ratio: str, output_dir: str):
                 set_type = 'test'
             else:
                 set_type = 'val'
-            output_path = '/'.join([output_dir, 'labels', set_type, filename_no_ext + '.txt'])
-            yolo_output_file = open(output_path, 'a')
+            output_label_path = '/'.join([output_dir, 'labels', set_type, filename_no_ext + '.txt'])
+            yolo_output_file = open(output_label_path, 'a')
 
             name_split = filename.split('.')
+            img_path = '/'.join([photos_dir, label, '.'.join(filename.split('.')[:-1])])
             try:
-                img = Image.open('/'.join([photos_dir, label, '.'.join(filename.split('.')[:-1])]))
+                img = Image.open(img_path)
             except FileNotFoundError:
-                img = Image.open('/'.join([photos_dir, label, ''.join(name_split[:-2]) + '.' + name_split[-2].upper()]))
-            txt = open('/'.join([txts_dir, label, filename]), 'r')
+                img_path = '/'.join([photos_dir, label, ''.join(name_split[:-2]) + '.' + name_split[-2].upper()])
+                img = Image.open(img_path)
+
+            output_img_path = '/'.join([output_dir, 'images', set_type])
+            shutil.copy(img_path, output_img_path)
 
             width, height = img.size
-
+            txt = open('/'.join([txts_dir, label, filename]), 'r')
             txt.readline()  # ignore first line
             line = txt.readline()
 
