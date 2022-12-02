@@ -3,29 +3,37 @@
   - The ExDark data directory structure is as follows:
     ```text
       ExDark_dataset
-        ├── Annotations
-        │    └── Bicycle
-        │         ├── image1.jpg.txt
-        │         └── image2.jpg.txt
-        └── Images
-             └── Bicycle
-                  ├── image1.jpg
-                  └── image2.jpg
+        ├── annotations
+        │   ├── Bicycle
+        │   ├── Boat
+        │   ...
+        └── images
+            ├── Bicycle
+            ├── Boat
+            ...
     ```
+    
   - Convert
     ```shell
-    python exDark2Yolo.py --annotations-dir dataset/Annotations/ \
-                          --images-dir dataset/images/ \
-                          --output-dir output/
+    python exDark2Yolo.py --annotations-dir dataset/annotations \
+                          --images-dir dataset/images \
+                          --ratio 8:1:1 \
+                          --output-dir output
     ```
-    - `--annotations-dir`: ExDark annotations Directory, end with '/'.
-    - `--images-dir`: ExDark images Directory, end with '/'.
-    - `--output-dir`: (optional) Output Directory, end with '/'.
+    - `--annotations-dir`: ExDark annotations directory.
+    - `--images-dir`: ExDark images directory.
+    - `--ratio`: (optional) Ratio between train/test/val, default 8:1:1.
+    - `--output-dir`: (optional) Images and annotations output directory.
 
   - Converted directory structure (output directory):
     ```text
-         output
-           └── Bicycle
-                 ├── image1.jpg.txt
-                 └── image2.jpg.txt
+      output
+        ├── images
+        │   ├── test
+        │   ├── train
+        │   └── val
+        └── labels
+            ├── test
+            ├── train
+            └── val
     ```
