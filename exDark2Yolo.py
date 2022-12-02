@@ -72,9 +72,9 @@ def ExDark2Yolo(txts_dir: str, photos_dir: str, ratio: str, output_dir: str):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--annotations-dir', type=str, required=True, help="ExDark annotations Directory")
-    parser.add_argument('--images-dir', type=str, required=True, help="ExDark images Directory")
-    parser.add_argument('--ratio', type=str, default='8:1:1', help="Ratio between train/test/val, default 8:1:1")
-    parser.add_argument('--output-dir', type=str, default="output")
+    parser.add_argument('--annotations-dir', type=str, required=True, help="ExDark annotations directory.")
+    parser.add_argument('--images-dir', type=str, required=True, help="ExDark images directory.")
+    parser.add_argument('--ratio', type=str, default='8:1:1', help="Ratio between train/test/val, default 8:1:1.")
+    parser.add_argument('--output-dir', type=str, default="output", help="Images and annotations Output directory.")
     args = parser.parse_args()
     ExDark2Yolo(args.annotations_dir, args.images_dir, args.ratio, args.output_dir)
