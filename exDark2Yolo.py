@@ -67,10 +67,10 @@ def ExDark2Yolo(txts_dir: str, imgs_dir: str, ratio: str, version: int, output_d
                 h = h0 / height
 
                 yolo_output_file.write(' '.join([str(class_idx),
-                                                 format(x, '.5f'),
-                                                 format(y, '.5f'),
-                                                 format(w, '.5f'),
-                                                 format(h, '.5f'),
+                                                 format(x, '.6f'),
+                                                 format(y, '.6f'),
+                                                 format(w, '.6f'),
+                                                 format(h, '.6f'),
                                                  ]) + '\n')
                 line = txt.readline()
 
