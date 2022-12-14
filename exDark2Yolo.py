@@ -6,7 +6,7 @@ import shutil
 labels = ['Bicycle', 'Boat', 'Bottle', 'Bus', 'Car', 'Cat', 'Chair', 'Cup', 'Dog', 'Motorbike', 'People', 'Table']
 
 
-def ExDark2Yolo(txts_dir: str, photos_dir: str, ratio: str, output_dir: str):
+def ExDark2Yolo(txts_dir: str, imgs_dir: str, ratio: str, version: int, output_dir: str):
     ratios = ratio.split(':')
     ratio_train, ratio_test, ratio_val = int(ratios[0]), int(ratios[1]), int(ratios[2])
     ratio_sum = ratio_train + ratio_test + ratio_val
@@ -35,11 +35,11 @@ def ExDark2Yolo(txts_dir: str, photos_dir: str, ratio: str, output_dir: str):
             yolo_output_file = open(output_label_path, 'a')
 
             name_split = filename.split('.')
-            img_path = '/'.join([photos_dir, label, '.'.join(filename.split('.')[:-1])])
+            img_path = '/'.join([imgs_dir, label, '.'.join(filename.split('.')[:-1])])
             try:
                 img = Image.open(img_path)
             except FileNotFoundError:
-                img_path = '/'.join([photos_dir, label, ''.join(name_split[:-2]) + '.' + name_split[-2].upper()])
+                img_path = '/'.join([imgs_dir, label, ''.join(name_split[:-2]) + '.' + name_split[-2].upper()])
                 img = Image.open(img_path)
 
             output_img_path = '/'.join([output_dir, 'images', set_type])
@@ -52,12 +52,19 @@ def ExDark2Yolo(txts_dir: str, photos_dir: str, ratio: str, output_dir: str):
 
             while line != '':
                 datas = line.strip().split()
-
                 class_idx = labels.index(datas[0])
-                x = int(datas[1]) / width
-                y = int(datas[2]) / height
-                w = int(datas[3]) / width
-                h = int(datas[4]) / height
+                x0, y0, w0, h0 = int(datas[1]), int(datas[2]), int(datas[3]), int(datas[4])
+                if version == 5:
+                    x = (x0 + w0/2) / width
+                    y = (y0 + h0/2) / height
+                elif version == 3:
+                    x = x0 / width
+                    y = y0 / height
+                else:
+                    print("Version of YOLO error.")
+                    return
+                w = w0 / width
+                h = h0 / height
 
                 yolo_output_file.write(' '.join([str(class_idx),
                                                  format(x, '.5f'),
@@ -75,6 +82,7 @@ if __name__ == '__main__':
     parser.add_argument('--annotations-dir', type=str, required=True, help="ExDark annotations directory.")
     parser.add_argument('--images-dir', type=str, required=True, help="ExDark images directory.")
     parser.add_argument('--ratio', type=str, default='8:1:1', help="Ratio between train/test/val, default 8:1:1.")
+    parser.add_argument('--version', type=int, choices=[3, 5], default='5', help="Version of YOLO(3 or 5), default 5.")
     parser.add_argument('--output-dir', type=str, default="output", help="Images and converted YOLO annotations output directory.")
     args = parser.parse_args()
-    ExDark2Yolo(args.annotations_dir, args.images_dir, args.ratio, args.output_dir)
+    ExDark2Yolo(args.annotations_dir, args.images_dir, args.ratio, args.version, args.output_dir)
