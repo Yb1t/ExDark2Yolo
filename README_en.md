@@ -1,5 +1,5 @@
 # ExDark2Yolo
-### Convert ExDark annotated format data to YOLO format data
+### Convert [ExDark](https://github.com/cs-chan/Exclusively-Dark-Image-Dataset) annotated format data to YOLO format data
 [简体中文](./README.md) | English
   - The ExDark data directory structure is as follows:
     ```text
@@ -42,5 +42,6 @@
     ```
     
     
-  - Output download:
-    - YOLOv5： [Baidu Netdisk](https://pan.baidu.com/s/1o_zBJ9ZTbDGNZz3TUjUuYQ) | Verification Code：zf76 (Provided by [@Mr-ind1fferent](https://github.com/Mr-ind1fferent))
+  - Output download(Provided by [@Mr-ind1fferent](https://github.com/Mr-ind1fferent)):
+    - YOLOv5(Output from this script): [Baidu Netdisk](https://pan.baidu.com/s/1o_zBJ9ZTbDGNZz3TUjUuYQ?pwd=zf76)
+    - YOLOv5(Divide the dataset by[ ExDark imageclasslist.txt ](https://github.com/cs-chan/Exclusively-Dark-Image-Dataset/tree/master/Groundtruth)): [Baidu Netdisk](https://pan.baidu.com/s/14XTvnuHR5k1QYqsNgJcNfA?pwd=jam3)
