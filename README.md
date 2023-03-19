@@ -1,5 +1,5 @@
 # ExDark2Yolo
-### 将ExDark标注格式的数据转换成YOLO格式的数据
+### 将[ExDark](https://github.com/cs-chan/Exclusively-Dark-Image-Dataset)标注格式的数据转换成YOLO格式的数据
 简体中文 | [English](./README_en.md)
   - ExDark的数据目录结构如下:
     ```text
@@ -41,5 +41,6 @@
             └── val
     ```
     
-  - 输出下载：
-    - YOLOv5： [百度网盘](https://pan.baidu.com/s/1o_zBJ9ZTbDGNZz3TUjUuYQ) | 提取码：zf76 （由 [@Mr-ind1fferent](https://github.com/Mr-ind1fferent) 提供）
+  - 输出下载（由 [@Mr-ind1fferent](https://github.com/Mr-ind1fferent) 提供）：
+    - YOLOv5（此脚本输出）：[百度网盘](https://pan.baidu.com/s/1o_zBJ9ZTbDGNZz3TUjUuYQ?pwd=zf76) 
+    - YOLOv5（按[ ExDark imageclasslist.txt ](https://github.com/cs-chan/Exclusively-Dark-Image-Dataset/tree/master/Groundtruth)划分数据集）：[百度网盘](https://pan.baidu.com/s/14XTvnuHR5k1QYqsNgJcNfA?pwd=jam3)
